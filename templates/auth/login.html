@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Login — SiteGen AI{% endblock %}
+{% block navbar %}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/auth.css">{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo"><span class="logo-icon"><i class="fas fa-bolt"></i></span> SiteGen<span class="text-gradient">AI</span></div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to your account</p>
+        </div>
+        <div class="auth-alert" id="auth-alert"></div>
+        <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-btn">Sign In</button>
+        </form>
+        <div class="auth-footer">
+            Don't have an account? <a href="/register">Create one</a>
+        </div>
+    </div>
+</div>
+<script>
+async function handleLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const alert = document.getElementById('auth-alert');
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
+    alert.className = 'auth-alert';
+    alert.style.display = 'none';
+    try {
+        await apiCall('/api/auth/login', {
+            method: 'POST',
+            body: { email: document.getElementById('email').value, password: document.getElementById('password').value }
+        });
+        window.location.href = '/dashboard';
+    } catch (err) {
+        alert.textContent = err.message;
+        alert.className = 'auth-alert error';
+        alert.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — SiteGen AI{% endblock %}
+{% block content %}
+<style>
+.dashboard{padding:2rem;max-width:1200px;margin:0 auto}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+.dash-header h1{font-size:1.8rem;font-weight:700}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;display:flex;align-items:center;gap:1rem}
+.stat-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.stat-icon.purple{background:rgba(124,58,237,0.15);color:var(--accent-primary)}
+.stat-icon.cyan{background:rgba(6,182,212,0.15);color:var(--accent-secondary)}
+.stat-icon.green{background:rgba(16,185,129,0.15);color:var(--success)}
+.stat-value{font-size:1.5rem;font-weight:700}
+.stat-label{font-size:.8rem;color:var(--text-muted)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.project-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;transition:var(--transition-normal);cursor:pointer}
+.project-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);box-shadow:var(--shadow-glow)}
+.project-card h3{font-size:1.1rem;margin-bottom:.5rem}
+.project-card p{color:var(--text-muted);font-size:.85rem;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-meta{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--text-muted)}
+.project-actions{display:flex;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-color)}
+</style>
+<div class="dashboard animate-fade-up">
+    <div class="dash-header">
+        <div>
+            <h1>Welcome, {{ user.full_name or user.username }} 👋</h1>
+            <p style="color:var(--text-muted)">Manage your AI-generated websites</p>
+        </div>
+        <a href="/builder" class="btn btn-primary"><i class="fas fa-plus"></i> New Website</a>
+    </div>
+
+    <div class="dash-stats">
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-folder"></i></div>
+            <div><div class="stat-value">{{ projects|length }}</div><div class="stat-label">Total Projects</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-check-circle"></i></div>
+            <div><div class="stat-value">{{ projects|selectattr('status','equalto','completed')|list|length }}</div><div class="stat-label">Completed</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-magic"></i></div>
+            <div><div class="stat-value">{{ projects|length }}</div><div class="stat-label">Websites Generated</div></div>
+        </div>
+    </div>
+
+    {% if projects %}
+    <h2 style="margin-bottom:1rem;font-size:1.2rem">Your Projects</h2>
+    <div class="projects-grid">
+        {% for project in projects %}
+        <div class="project-card" onclick="window.location='/builder/{{ project.id }}'">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+                <h3>{{ project.name }}</h3>
+                {% if project.status == 'completed' %}
+                <span class="badge badge-success">Completed</span>
+                {% elif project.status == 'generating' %}
+                <span class="badge badge-warning">Generating</span>
+                {% elif project.status == 'failed' %}
+                <span class="badge badge-error">Failed</span>
+                {% else %}
+                <span class="badge badge-draft">Draft</span>
+                {% endif %}
+            </div>
+            <p>{{ project.description or 'No description' }}</p>
+            <div class="project-meta">
+                <span>{{ project.website_type or 'General' }}</span>
+                <span>{{ project.created_at.strftime('%b %d, %Y') if project.created_at else '' }}</span>
+            </div>
+            <div class="project-actions">
+                <a href="/builder/{{ project.id }}" class="btn btn-secondary btn-sm" onclick="event.stopPropagation()"><i class="fas fa-edit"></i> Edit</a>
+                <a href="/preview/{{ project.id }}" class="btn btn-ghost btn-sm" onclick="event.stopPropagation()"><i class="fas fa-eye"></i> Preview</a>
+                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteProject('{{ project.id }}')"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-rocket"></i>
+        <h3>No projects yet</h3>
+        <p>Create your first AI-generated website</p>
+        <a href="/builder" class="btn btn-primary" style="margin-top:1rem"><i class="fas fa-plus"></i> Create Website</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+async function deleteProject(id) {
+    if (!confirm('Delete this project and all its data?')) return;
+    try {
+        await apiCall(`/api/projects/${id}`, { method: 'DELETE' });
+        showToast('Project deleted', 'success');
+        location.reload();
+    } catch (e) { showToast(e.message, 'error'); }
+}
+</script>
+{% endblock %}

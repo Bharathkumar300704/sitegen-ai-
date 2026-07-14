@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview — {{ project.name if project else 'Website' }} — SiteGen AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        body{margin:0;overflow:hidden}
+        .preview-page{height:100vh;display:flex;flex-direction:column}
+        .preview-bar{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.5rem;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
+        .preview-bar .title{font-size:.9rem;font-weight:600}
+        .preview-bar .devices{display:flex;gap:.3rem}
+        .device-b{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--text-muted);cursor:pointer;border-radius:6px}
+        .device-b.active,.device-b:hover{color:var(--accent-primary);background:var(--bg-card)}
+        .preview-body{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:1rem;background:var(--bg-primary);overflow:auto}
+        .p-frame{border:none;background:white;border-radius:8px;height:100%;transition:width .3s ease}
+        .p-frame.desktop{width:100%}.p-frame.tablet{width:768px}.p-frame.mobile{width:375px}
+    </style>
+</head>
+<body>
+<div class="preview-page">
+    <div class="preview-bar">
+        <a href="/builder/{{ project.id if project else '' }}" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back to Builder</a>
+        <div class="title">{{ project.name if project else 'Preview' }}</div>
+        <div class="devices">
+            <button class="device-b active" onclick="setDevice(this,'desktop')"><i class="fas fa-desktop"></i></button>
+            <button class="device-b" onclick="setDevice(this,'tablet')"><i class="fas fa-tablet-alt"></i></button>
+            <button class="device-b" onclick="setDevice(this,'mobile')"><i class="fas fa-mobile-alt"></i></button>
+        </div>
+    </div>
+    <div class="preview-body">
+        {% if website and website.html_content %}
+        <iframe class="p-frame desktop" id="pf" srcdoc="{{ website.html_content|e }}"></iframe>
+        {% else %}
+        <div style="color:var(--text-muted);text-align:center;padding:4rem">No website generated yet</div>
+        {% endif %}
+    </div>
+</div>
+<script>
+function setDevice(btn, device) {
+    document.querySelectorAll('.device-b').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = document.getElementById('pf');
+    if(f){f.className='p-frame '+device;}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}SiteGen AI — AI Website Builder{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<style>
+.landing{min-height:100vh;position:relative;overflow:hidden}
+.landing::before{content:'';position:absolute;width:600px;height:600px;background:var(--accent-primary);border-radius:50%;filter:blur(200px);opacity:0.15;top:-200px;right:-200px}
+.landing::after{content:'';position:absolute;width:400px;height:400px;background:var(--accent-secondary);border-radius:50%;filter:blur(150px);opacity:0.1;bottom:-100px;left:-100px}
+.landing-nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;position:relative;z-index:10}
+.landing-nav .logo{display:flex;align-items:center;gap:.5rem;font-size:1.4rem;font-weight:800}
+.landing-nav .nav-btns{display:flex;gap:1rem;align-items:center}
+.hero{max-width:900px;margin:0 auto;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:999px;font-size:.8rem;color:var(--accent-primary);font-weight:500;margin-bottom:2rem}
+.hero h1{font-size:clamp(2.5rem,6vw,4.2rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;letter-spacing:-1px}
+.hero p{font-size:1.15rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.features{max-width:1100px;margin:0 auto;padding:4rem 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;position:relative;z-index:1}
+.feature-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:2rem;transition:var(--transition-normal)}
+.feature-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-4px);box-shadow:var(--shadow-glow)}
+.feature-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1rem}
+.feature-icon.purple{background:rgba(124,58,237,0.15);color:var(--accent-primary)}
+.feature-icon.cyan{background:rgba(6,182,212,0.15);color:var(--accent-secondary)}
+.feature-icon.green{background:rgba(16,185,129,0.15);color:var(--success)}
+.feature-card h3{font-size:1.1rem;margin-bottom:.5rem}
+.feature-card p{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.languages{text-align:center;padding:3rem 2rem 5rem;position:relative;z-index:1}
+.languages h2{font-size:1.8rem;font-weight:700;margin-bottom:1rem}
+.languages p{color:var(--text-muted);margin-bottom:2rem}
+.lang-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;max-width:700px;margin:0 auto}
+.lang-tag{padding:.3rem .8rem;background:var(--bg-card);border:1px solid var(--border-color);border-radius:999px;font-size:.8rem;color:var(--text-secondary)}
+.landing-footer{text-align:center;padding:2rem;border-top:1px solid var(--border-color);color:var(--text-muted);font-size:.85rem;position:relative;z-index:1}
+</style>
+
+<div class="landing">
+    <div class="landing-nav">
+        <div class="logo"><span class="logo-icon"><i class="fas fa-bolt"></i></span> SiteGen<span class="text-gradient">AI</span></div>
+        <div class="nav-btns">
+            <a href="/login" class="btn btn-ghost btn-sm">Login</a>
+            <a href="/register" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
+    </div>
+
+    <section class="hero animate-fade-up">
+        <div class="hero-badge"><i class="fas fa-sparkles"></i> AI-Powered Website Builder</div>
+        <h1>Build Stunning Websites with <span class="text-gradient">AI Magic</span></h1>
+        <p>Describe your dream website in any language. SiteGen AI understands, plans, designs, and generates a complete, responsive website in seconds.</p>
+        <div class="hero-btns">
+            <a href="/register" class="btn btn-primary btn-lg"><i class="fas fa-rocket"></i> Start Building Free</a>
+            <a href="#features" class="btn btn-secondary btn-lg"><i class="fas fa-play"></i> See How It Works</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <div class="feature-icon purple"><i class="fas fa-language"></i></div>
+            <h3>Any Language Input</h3>
+            <p>Describe your website in English, Tamil, Hindi, Arabic, Japanese, or any language. Our AI understands them all.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon cyan"><i class="fas fa-magic"></i></div>
+            <h3>AI-Powered Generation</h3>
+            <p>Powered by Google Gemini, our AI analyzes your needs, plans the structure, and generates production-quality code.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon green"><i class="fas fa-mobile-alt"></i></div>
+            <h3>Responsive Design</h3>
+            <p>Every generated website is mobile-friendly, SEO-optimized, and looks stunning on all devices.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon purple"><i class="fas fa-eye"></i></div>
+            <h3>Live Preview</h3>
+            <p>Preview your website instantly in desktop, tablet, and mobile views. Make changes and see results in real-time.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon cyan"><i class="fas fa-download"></i></div>
+            <h3>Download & Deploy</h3>
+            <p>Download your complete website as a ZIP file with HTML, CSS, and JavaScript. Deploy anywhere.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon green"><i class="fas fa-history"></i></div>
+            <h3>Version History</h3>
+            <p>Every generation is saved as a version. Go back to any previous version anytime.</p>
+        </div>
+    </section>
+
+    <section class="languages">
+        <h2>Speak Any Language</h2>
+        <p>Our AI detects your language automatically</p>
+        <div class="lang-tags">
+            <span class="lang-tag">🇬🇧 English</span><span class="lang-tag">🇮🇳 Tamil</span>
+            <span class="lang-tag">🇮🇳 Hindi</span><span class="lang-tag">🇮🇳 Telugu</span>
+            <span class="lang-tag">🇮🇳 Malayalam</span><span class="lang-tag">🇮🇳 Kannada</span>
+            <span class="lang-tag">🇫🇷 French</span><span class="lang-tag">🇪🇸 Spanish</span>
+            <span class="lang-tag">🇩🇪 German</span><span class="lang-tag">🇸🇦 Arabic</span>
+            <span class="lang-tag">🇯🇵 Japanese</span><span class="lang-tag">🇨🇳 Chinese</span>
+            <span class="lang-tag">🇮🇳 Bengali</span><span class="lang-tag">🇮🇳 Marathi</span>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <p>&copy; 2024 SiteGen AI. Built with ❤️ and Artificial Intelligence.</p>
+    </footer>
+</div>
+{% endblock %}

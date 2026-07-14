@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Register — SiteGen AI{% endblock %}
+{% block navbar %}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/auth.css">{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo"><span class="logo-icon"><i class="fas fa-bolt"></i></span> SiteGen<span class="text-gradient">AI</span></div>
+            <h1>Create Account</h1>
+            <p>Start building amazing websites with AI</p>
+        </div>
+        <div class="auth-alert" id="auth-alert"></div>
+        <form class="auth-form" id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="full_name" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" id="username" placeholder="johndoe" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="password" placeholder="Min 6 characters" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="register-btn">Create Account</button>
+        </form>
+        <div class="auth-footer">
+            Already have an account? <a href="/login">Sign in</a>
+        </div>
+    </div>
+</div>
+<script>
+async function handleRegister(e) {
+    e.preventDefault();
+    const btn = document.getElementById('register-btn');
+    const alert = document.getElementById('auth-alert');
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+    alert.className = 'auth-alert';
+    alert.style.display = 'none';
+    try {
+        await apiCall('/api/auth/register', {
+            method: 'POST',
+            body: {
+                full_name: document.getElementById('full_name').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            }
+        });
+        alert.textContent = 'Account created! Redirecting to login...';
+        alert.className = 'auth-alert success';
+        alert.style.display = 'block';
+        setTimeout(() => window.location.href = '/login', 1500);
+    } catch (err) {
+        alert.textContent = err.message;
+        alert.className = 'auth-alert error';
+        alert.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+    }
+}
+</script>
+{% endblock %}

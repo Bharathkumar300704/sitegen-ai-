@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Website Builder — SiteGen AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/builder.css">{% endblock %}
+{% block content %}
+<div class="builder-layout" id="builder-app" data-project-id="{{ project.id if project else '' }}" data-website-id="{{ website.id if website else '' }}">
+    <!-- Sidebar -->
+    <div class="builder-sidebar">
+        <div class="prompt-section">
+            <h2><i class="fas fa-magic"></i> Describe Your Website</h2>
+            <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem">Type in any language — English, Tamil, Hindi, or any other</p>
+            <textarea class="prompt-textarea" id="prompt-input" placeholder="Example: Create a modern portfolio website for a photographer named Alex. Use a dark theme with gold accents. Include a hero section, gallery, about me, and contact form.&#10;&#10;உதாரணம்: ஒரு புகைப்படக் கலைஞருக்கான நவீன போர்ட்ஃபோலியோ இணையதளம் உருவாக்கவும்.">{{ website.html_content[:0] if website else '' }}</textarea>
+            <div class="prompt-actions">
+                <button class="btn btn-primary btn-block" id="generate-btn" onclick="generateWebsite()">
+                    <i class="fas fa-magic"></i> Generate
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section" id="progress-section">
+            <h3 style="font-size:.95rem;margin-bottom:.5rem"><i class="fas fa-cog fa-spin"></i> Generating...</h3>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+            <div class="progress-steps">
+                <div class="step" id="step-0"><i class="fas fa-circle"></i> Detecting language</div>
+                <div class="step" id="step-1"><i class="fas fa-circle"></i> Analyzing requirements</div>
+                <div class="step" id="step-2"><i class="fas fa-circle"></i> Planning website structure</div>
+                <div class="step" id="step-3"><i class="fas fa-circle"></i> Generating code</div>
+                <div class="step" id="step-4"><i class="fas fa-circle"></i> Complete!</div>
+            </div>
+        </div>
+
+        <!-- Code Tabs -->
+        <div class="code-tabs">
+            <div class="code-tab active" data-tab="html">HTML</div>
+            <div class="code-tab" data-tab="css">CSS</div>
+            <div class="code-tab" data-tab="js">JS</div>
+        </div>
+        <div class="code-content">
+            <div class="code-panel active" id="panel-html"><pre><code id="code-html">{{ website.html_content if website else '// Generated HTML will appear here' }}</code></pre></div>
+            <div class="code-panel" id="panel-css"><pre><code id="code-css">{{ website.css_content if website else '// Generated CSS will appear here' }}</code></pre></div>
+            <div class="code-panel" id="panel-js"><pre><code id="code-js">{{ website.js_content if website else '// Generated JS will appear here' }}</code></pre></div>
+        </div>
+    </div>
+
+    <!-- Main Preview Area -->
+    <div class="builder-main">
+        <div class="preview-toolbar">
+            <div class="preview-devices">
+                <button class="device-btn active" data-device="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
+                <button class="device-btn" data-device="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
+                <button class="device-btn" data-device="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
+            </div>
+            <div class="preview-actions">
+                <button class="btn btn-ghost btn-sm" onclick="openFullPreview()"><i class="fas fa-external-link-alt"></i> Full Preview</button>
+                <button class="btn btn-primary btn-sm" onclick="downloadWebsite()"><i class="fas fa-download"></i> Download ZIP</button>
+            </div>
+        </div>
+        <div class="preview-container">
+            {% if website and website.html_content %}
+            <iframe class="preview-frame" id="preview-frame" srcdoc="{{ website.html_content|e }}"></iframe>
+            {% else %}
+            <div class="empty-preview" id="empty-preview">
+                <i class="fas fa-globe"></i>
+                <h3>Your Website Preview</h3>
+                <p>Describe your dream website in the prompt box and click Generate. Your website will appear here instantly.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/builder.js"></script>{% endblock %}
